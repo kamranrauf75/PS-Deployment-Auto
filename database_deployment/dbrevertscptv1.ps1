@@ -1,3 +1,16 @@
+function WriteToLogFile ($message)
+{
+    $message +" - "+ (Get-Date).ToString() >> $logfilepath
+}
+
+$logfilepath = "D:\OtherProjects\On\database_deployment\dblog.txt"
+
+if(Test-Path $logfilepath)
+{
+    WriteToLogFile "------------------new run------------------"
+}
+
+
 function Get-HashTable-From-Json($JsonPath)
 {
     $json = Get-Content $JsonPath | Out-String | ConvertFrom-Json
@@ -137,6 +150,8 @@ $OgScriptPath = "D:\OtherProjects\On\database_deployment\originalDbScript.sql"
 $RevertScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
 $RevertScriptJsonPath = "D:\OtherProjects\DbScript\revertDbScript.json"
 
+
+# $RevertScriptPath = Get-Path
 revert-Db-Changes $OgScriptPath $RevertScriptPath $RevertScriptJsonPath
 
 

@@ -3,7 +3,7 @@
     $message +" - "+ (Get-Date).ToString() >> $logfilepath
 }
 
-$logfilepath = "D:\Logging\dblog.txt"
+$logfilepath = "D:\OtherProjects\On\database_deployment\dblog.txt"
 
 if(Test-Path $logfilepath)
 {
@@ -132,7 +132,8 @@ try {
             {
                 $totalRowsAffected += $rowsAffected
             }
-            $hashmap.add( $count.ToString(), $rowsAffected)
+            $hashKey = "Statement $count"
+            $hashmap.add( $hashKey, $rowsAffected)
             $table = Get-TableName($statement)
             if($table -ne "Table name not found." -or $rowsAffected -eq -1)
                 {

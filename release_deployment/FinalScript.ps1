@@ -163,7 +163,7 @@ if(-not(Check-IsElevated)){
    throw "Please run this script as an administrator"
 }
 
-$logfilepath = "D:\Logging\log.txt"
+$logfilepath = "D:\OtherProjects\On\database_deployment\log.txt"
 
 if(Test-Path $logfilepath)
 {
