@@ -40,7 +40,7 @@ function revert-Db-Changes($originalScript, $revertScript, $JsonPath){
     $ostatementsCount = $ostatements.Count
     if($rstatementsCount -ne $ostatementsCount)
     {
-        Write-Output "The number of statements in the original script and revert script are not equal."
+        Write-Output "The number of sql statements in the original script and revert script are not equal."
         return
     }
     
