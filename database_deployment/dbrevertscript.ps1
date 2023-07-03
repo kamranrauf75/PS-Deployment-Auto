@@ -10,6 +10,19 @@ if(Test-Path $logfilepath)
     WriteToLogFile "------------------new run------------------"
 }
 
+function Get-Path($ScriptPath, $filename)
+{
+    #$ScriptPath = Read-Host -Prompt 'Enter the path of: $filename '
+    #$ScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
+
+    while(!($ScriptPath) -or !(Test-Path -Path $ScriptPath)){
+        if(!(Test-Path -Path $ScriptPath)){
+            Write-Output "The path you entered wasn't correct"}
+        $ScriptPath = Read-Host -Prompt "Enter the path of: $filename"
+    }
+    $ScriptPath
+}
+
 function Read-Paths(){
     $JsonPath = "D:\OtherProjects\On\ConfigPaths.JSON"
     $json = Get-Content $JsonPath | Out-String | ConvertFrom-Json
@@ -17,9 +30,12 @@ function Read-Paths(){
     $RevertScriptPath = $json.RevertScriptPath
     $revertDbScriptJSONPath = $json.revertDbScriptJSONPath
 
+    $OriginalScriptPath = Get-Path $OriginalScriptPath "Original-Script"
+    $RevertScriptPath = Get-Path $RevertScriptPath "Revert-Script"
+    $revertDbScriptJSONPath = Get-Path $revertDbScriptJSONPath "Revert-Db-Script-JSON"
+
     $OriginalScriptPath, $RevertScriptPath,$revertDbScriptJSONPath
 }
-
 
 function Get-HashTable-From-Json($JsonPath)
 {
@@ -32,20 +48,7 @@ function Get-HashTable-From-Json($JsonPath)
     $hashmap
 }
 
-function Get-Path()
-{
-    $ScriptPath = Read-Host -Prompt 'Enter the Db Revert Script path '
-    $ScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
 
-    while(!($ScriptPath) -or !(Test-Path -Path $ScriptPath) -or ((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
-        if(!(Test-Path -Path $ScriptPath)){
-            Write-Output "The path you entered wasn't correct"}
-        elseif(((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
-        Write-Output "Folder is empty!"}
-        $ScriptPath = Read-Host -Prompt 'Enter the Source path where the release is located '
-    }
-    $ScriptPath
-}
 
 function revert-Db-Changes($originalScript, $revertScript, $JsonPath){
     $delimiter = ";"
