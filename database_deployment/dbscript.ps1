@@ -1,4 +1,12 @@
-﻿function WriteToLogFile ($message)
+﻿function Read-Paths(){
+    $JsonPath = "D:\OtherProjects\On\ConfigPaths.JSON"
+    $json = Get-Content $JsonPath | Out-String | ConvertFrom-Json
+    $OriginalScriptPath = $json.OriginalScriptPath
+    $revertDbScriptJSONPath = $json.revertDbScriptJSONPath
+    $OriginalScriptPath, $revertDbScriptJSONPath
+}
+
+function WriteToLogFile ($message)
 {
     $message +" - "+ (Get-Date).ToString() >> $logfilepath
 }
@@ -98,8 +106,11 @@ try {
     #         $ScriptPath = Read-Host -Prompt 'Enter the Source path where the release is located '
     #     }
 
-    $ScriptPath = Get-Path
+    $OriginalScriptPath, $revertDbScriptJSONPath = Read-Paths
+    $ScriptPath = $OriginalScriptPath
 
+    #$ScriptPath = Get-Path
+    
     $MyQuery = get-content $ScriptPath;
 
     WriteToLogFile "The content of the query is: $MyQuery"

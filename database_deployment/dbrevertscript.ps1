@@ -10,6 +10,16 @@ if(Test-Path $logfilepath)
     WriteToLogFile "------------------new run------------------"
 }
 
+function Read-Paths(){
+    $JsonPath = "D:\OtherProjects\On\ConfigPaths.JSON"
+    $json = Get-Content $JsonPath | Out-String | ConvertFrom-Json
+    $OriginalScriptPath = $json.OriginalScriptPath
+    $RevertScriptPath = $json.RevertScriptPath
+    $revertDbScriptJSONPath = $json.revertDbScriptJSONPath
+
+    $OriginalScriptPath, $RevertScriptPath,$revertDbScriptJSONPath
+}
+
 
 function Get-HashTable-From-Json($JsonPath)
 {
@@ -146,13 +156,14 @@ function run-Script($ScriptPath, $connString, $hashmap, $statements){
 #     $table
 # }
 
-$OgScriptPath = "D:\OtherProjects\On\database_deployment\originalDbScript.sql"
-$RevertScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
-$RevertScriptJsonPath = "D:\OtherProjects\DbScript\revertDbScript.json"
+# $OgScriptPath = "D:\OtherProjects\On\database_deployment\originalDbScript.sql"
+# $RevertScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
+# $RevertScriptJsonPath = "D:\OtherProjects\DbScript\revertDbScript.json"
 
+$OriginalScriptPath, $RevertScriptPath, $revertDbScriptJSONPath = Read-Paths
 
 # $RevertScriptPath = Get-Path
-revert-Db-Changes $OgScriptPath $RevertScriptPath $RevertScriptJsonPath
+revert-Db-Changes $OriginalScriptPath $RevertScriptPath $revertDbScriptJSONPath
 
 
 #Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
