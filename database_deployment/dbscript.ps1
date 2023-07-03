@@ -1,4 +1,8 @@
-﻿function Get-Path($ScriptPath, $filename)
+﻿function WriteToLogFile ($message)
+{
+    $message +" - "+ (Get-Date).ToString() >> $logfilepath
+}
+function Get-Path($ScriptPath, $filename)
 {
     #$ScriptPath = Read-Host -Prompt 'Enter the path of: $filename '
     #$ScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
@@ -26,10 +30,6 @@ function Read-Paths(){
     
 }
 
-function WriteToLogFile ($message)
-{
-    $message +" - "+ (Get-Date).ToString() >> $logfilepath
-}
 
 $logfilepath = "D:\OtherProjects\On\database_deployment\dblog.txt"
 
