@@ -11,8 +11,8 @@ function Get-HashTable-From-Json($JsonPath)
 
 function Get-Path()
 {
-    #$ScriptPath = Read-Host -Prompt 'Enter the Db Revert Script path '
-    $ScriptPath = "D:\OtherProjects\DbScript\originalDbScript.sql"
+    $ScriptPath = Read-Host -Prompt 'Enter the Db Revert Script path '
+    $ScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
 
     while(!($ScriptPath) -or !(Test-Path -Path $ScriptPath) -or ((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
         if(!(Test-Path -Path $ScriptPath)){
@@ -47,9 +47,9 @@ function revert-Db-Changes($originalScript, $revertScript, $JsonPath){
     $hashmap = Get-HashTable-From-Json $JsonPath
     $connString = "Server=kamranrauf;Database=testDb;User=ka;Password=test123"
     #$ScriptPath = "D:\OtherProjects\DbScript\revertDbScript.sql"
-    $ScriptPath = Get-Path
+    # $ScriptPath = Get-Path
 
-    run-Script $ScriptPath $connString $hashmap $rstatements 
+    run-Script $revertScript $connString $hashmap $rstatements 
 }
 
 function run-Script($ScriptPath, $connString, $hashmap, $statements){
@@ -84,7 +84,11 @@ function run-Script($ScriptPath, $connString, $hashmap, $statements){
                 {
                     $totalRowsAffected += $rowsAffected
                 }
-                if ($hashmap[$counter] -ne $rowsAffected){
+                $hashmapSize = $hashmap.Count
+
+                #reverse comparison of hashmap and revert script rows affected
+
+                if ($hashmap[$hashmapSize - $counter - 1] -ne $rowsAffected){
                     WriteToLogFile "Error: The number of rows affected by the original query is not equal to the number of rows affected by the revert query"
                     throw "Error: The number of rows affected by the original query is not equal to the number of rows affected by the revert query"
                 }
@@ -120,5 +124,20 @@ function run-Script($ScriptPath, $connString, $hashmap, $statements){
 }
 
 
+# function Get-TableName($statement){
+#     $table = "Table name not found."
+#     if($statement -match "insert" -or $statement -match "update" -or $statement -match "delete")
+#     {
+#         $table = $statement -split " " | Where-Object { $_ -match '\S' } | Select-Object -First 3 | Select-Object -Last 1
+#     }
+#     $table
+# }
 
-revert-Db-Changes "D:\OtherProjects\DbScript\originalDbScript.sql" "D:\OtherProjects\DbScript\revertDbScript.sql" "D:\OtherProjects\DbScript\revertDbScript.json"
+$OgScriptPath = "D:\OtherProjects\On\database_deployment\originalDbScript.sql"
+$RevertScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
+$RevertScriptJsonPath = "D:\OtherProjects\DbScript\revertDbScript.json"
+
+revert-Db-Changes $OgScriptPath $RevertScriptPath $RevertScriptJsonPath
+
+
+#Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass

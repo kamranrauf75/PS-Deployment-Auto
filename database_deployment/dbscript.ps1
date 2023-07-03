@@ -24,7 +24,7 @@ function Check-IsElevated
         { Write-Output $false }   
  }
 
- function Get-TableName($query){
+function Get-TableName($query){
     
     # Regular expression patterns to match the table name for different query types
     $selectPattern = "FROM\s+(\w+)"
@@ -57,6 +57,21 @@ function Check-IsElevated
     throw "Please run this script as an administrator"
  }
 
+function Get-Path()
+{
+    #$ScriptPath = Read-Host -Prompt 'Enter the Db Script path '
+    $ScriptPath = "D:\OtherProjects\On\database_deployment\originalDbScript.sql"
+
+    while(!($ScriptPath) -or !(Test-Path -Path $ScriptPath) -or ((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
+        if(!(Test-Path -Path $ScriptPath)){
+            Write-Output "The path you entered wasn't correct"}
+        elseif(((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
+        Write-Output "Folder is empty!"}
+        $ScriptPath = Read-Host -Prompt 'Enter the Source path where the release is located '
+    }
+    $ScriptPath
+}
+
 $connString = "Server=kamranrauf;Database=testDb;User=ka;Password=test123"
  
 WriteToLogFile "Db Script ran with connection string: $connString"
@@ -83,7 +98,7 @@ try {
     #         $ScriptPath = Read-Host -Prompt 'Enter the Source path where the release is located '
     #     }
 
-    $ScriptPath = Get-Path()
+    $ScriptPath = Get-Path
 
     $MyQuery = get-content $ScriptPath;
 
@@ -131,7 +146,7 @@ try {
 
     #Write-Host "Changes successfully made to Db $rowsAffected" 
         
-    $hashmap | ConvertTo-Json | Out-File "D:\OtherProjects\DbScript\revertDbScript.json"
+    $hashmap | ConvertTo-Json | Out-File "D:\OtherProjects\On\database_deployment\revertDbScript.json"
     $tran.Commit()
 
 }    
@@ -145,21 +160,5 @@ catch {
 finally {
     $conn.Close()
     WriteToLogFile "Closing connection"
-}
-
-
-function Get-Path()
-{
-    #$ScriptPath = Read-Host -Prompt 'Enter the Db Script path '
-    $ScriptPath = "D:\OtherProjects\DbScript\originalDbScript.sql"
-
-    while(!($ScriptPath) -or !(Test-Path -Path $ScriptPath) -or ((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
-        if(!(Test-Path -Path $ScriptPath)){
-            Write-Output "The path you entered wasn't correct"}
-        elseif(((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
-        Write-Output "Folder is empty!"}
-        $ScriptPath = Read-Host -Prompt 'Enter the Source path where the release is located '
-    }
-    $ScriptPath
 }
 #Write-Output $error
