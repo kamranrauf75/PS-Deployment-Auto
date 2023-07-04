@@ -81,8 +81,6 @@ function revert-Db-Changes($originalScript, $revertScript, $JsonPath){
 function run-Script($ScriptPath, $connString, $hashmap, $statements){
     WriteToLogFile "Db Revert Script ran with connection string: $connString"
     $conn = New-Object System.Data.SqlClient.SqlConnection $connString
-    #$arr_values = @('1','1') 
-    #$tbl_name = "dbo.test1"
     
     $conn.Open()
 
@@ -149,15 +147,6 @@ function run-Script($ScriptPath, $connString, $hashmap, $statements){
 
 }
 
-
-# function Get-TableName($statement){
-#     $table = "Table name not found."
-#     if($statement -match "insert" -or $statement -match "update" -or $statement -match "delete")
-#     {
-#         $table = $statement -split " " | Where-Object { $_ -match '\S' } | Select-Object -First 3 | Select-Object -Last 1
-#     }
-#     $table
-# }
 
 # $OgScriptPath = "D:\OtherProjects\On\database_deployment\originalDbScript.sql"
 # $RevertScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
