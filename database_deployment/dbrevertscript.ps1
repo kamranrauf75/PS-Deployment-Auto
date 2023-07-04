@@ -1,5 +1,5 @@
 $JsonPathforRead = "D:\OtherProjects\On\ConfigPaths.JSON"
- 
+
 function Get-Path($ScriptPath, $filename)
 {
     #$ScriptPath = Read-Host -Prompt 'Enter the path of: $filename '
@@ -103,6 +103,8 @@ function run-Script($ScriptPath, $connString, $hashmap, $statements){
     try {
     
         $counter = 0
+        $totalRowsAffected = 0
+        $rowsAffected = 0
 
         foreach($statement in $statements)
         {
