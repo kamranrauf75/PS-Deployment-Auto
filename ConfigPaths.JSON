@@ -1,0 +1,7 @@
+{
+    "OriginalScriptPath":  "D:\\OtherProjects\\On\\database_deployment\\originalDbScript.sql",
+    "RevertScriptPath":  "D:\\OtherProjects\\On\\database_deployment\\revertDbScript.sql",
+    "revertDbScriptJSONPath":  "D:\\OtherProjects\\On\\database_deployment\\revertDbScript.json",
+    "logfilepath":  "D:\\OtherProjects\\On\\database_deployment\\log.txt",
+    "revertlogfilepath":  "D:\\OtherProjects\\On\\database_deployment\\dblog.txt"
+}
