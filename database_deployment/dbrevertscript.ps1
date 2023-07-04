@@ -1,15 +1,5 @@
-function WriteToLogFile ($message)
-{
-    $message +" - "+ (Get-Date).ToString() >> $logfilepath
-}
-
-$logfilepath = "D:\OtherProjects\On\database_deployment\dblog.txt"
-
-if(Test-Path $logfilepath)
-{
-    WriteToLogFile "------------------new run------------------"
-}
-
+$JsonPathforRead = "D:\OtherProjects\On\ConfigPaths.JSON"
+ 
 function Get-Path($ScriptPath, $filename)
 {
     #$ScriptPath = Read-Host -Prompt 'Enter the path of: $filename '
@@ -23,19 +13,41 @@ function Get-Path($ScriptPath, $filename)
     $ScriptPath
 }
 
-function Read-Paths(){
-    $JsonPath = "D:\OtherProjects\On\ConfigPaths.JSON"
-    $json = Get-Content $JsonPath | Out-String | ConvertFrom-Json
+function Read-Paths($JsonPathforRead){
+    
+    $json = Get-Content $JsonPathforRead | Out-String | ConvertFrom-Json
     $OriginalScriptPath = $json.OriginalScriptPath
     $RevertScriptPath = $json.RevertScriptPath
     $revertDbScriptJSONPath = $json.revertDbScriptJSONPath
+    $logfilepath = $json.logfilepath
+    $revertlogfilepath = $json.revertlogfilepath
 
     $OriginalScriptPath = Get-Path $OriginalScriptPath "Original-Script"
     $RevertScriptPath = Get-Path $RevertScriptPath "Revert-Script"
     $revertDbScriptJSONPath = Get-Path $revertDbScriptJSONPath "Revert-Db-Script-JSON"
+    $logfilepath = Get-Path $revertlogfilepath "Revert-Log-File"
+    #assigned revert log file path to log file path 
 
-    $OriginalScriptPath, $RevertScriptPath,$revertDbScriptJSONPath
+    $OriginalScriptPath, $RevertScriptPath,$revertDbScriptJSONPath, $logfilepath
 }
+
+
+# populating paths from json file
+$OriginalScriptPath, $RevertScriptPath, $revertDbScriptJSONPath, $logfilepath = Read-Paths $JsonPathforRead
+
+
+function WriteToLogFile ($message)
+{
+    $message +" - "+ (Get-Date).ToString() >> $logfilepath
+}
+
+
+if(Test-Path $logfilepath)
+{
+    WriteToLogFile "------------------new run------------------"
+}
+
+
 
 function Get-HashTable-From-Json($JsonPath)
 {
@@ -152,7 +164,7 @@ function run-Script($ScriptPath, $connString, $hashmap, $statements){
 # $RevertScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
 # $RevertScriptJsonPath = "D:\OtherProjects\DbScript\revertDbScript.json"
 
-$OriginalScriptPath, $RevertScriptPath, $revertDbScriptJSONPath = Read-Paths
+# $OriginalScriptPath, $RevertScriptPath, $revertDbScriptJSONPath = Read-Paths $JsonPathforRead
 
 # $RevertScriptPath = Get-Path
 revert-Db-Changes $OriginalScriptPath $RevertScriptPath $revertDbScriptJSONPath

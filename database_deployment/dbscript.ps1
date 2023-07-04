@@ -1,7 +1,6 @@
-﻿function WriteToLogFile ($message)
-{
-    $message +" - "+ (Get-Date).ToString() >> $logfilepath
-}
+﻿# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+$JsonPathforRead = "D:\OtherProjects\On\ConfigPaths.JSON"
+
 function Get-Path($ScriptPath, $filename)
 {
     #$ScriptPath = Read-Host -Prompt 'Enter the path of: $filename '
@@ -15,28 +14,35 @@ function Get-Path($ScriptPath, $filename)
     $ScriptPath
 }
 
-function Read-Paths(){
+function Read-Paths($JsonPathforRead){
     $JsonPath = "D:\OtherProjects\On\ConfigPaths.JSON"
     $json = Get-Content $JsonPath | Out-String | ConvertFrom-Json
     $OriginalScriptPath = $json.OriginalScriptPath
     $revertDbScriptJSONPath = $json.revertDbScriptJSONPath
+    $revertlogfilepath = $json.revertlogfilepath
 
     $OriginalScriptPath = Get-Path $OriginalScriptPath "Original-Script"
     $revertDbScriptJSONPath = Get-Path $revertDbScriptJSONPath "Revert-Db-Script-JSON"
+    $logfilepath = Get-Path $revertlogfilepath "Revert-Log-File"
 
+    $OriginalScriptPath, $revertDbScriptJSONPath, $logfilepath
 
-    $OriginalScriptPath, $revertDbScriptJSONPath
-
-    
 }
 
+# $logfilepath = "D:\OtherProjects\On\database_deployment\dblog.txt"
 
-$logfilepath = "D:\OtherProjects\On\database_deployment\dblog.txt"
+$OriginalScriptPath, $revertDbScriptJSONPath, $logfilepath = Read-Paths $JsonPathforRead
+
+function WriteToLogFile ($message)
+{
+    $message +" - "+ (Get-Date).ToString() >> $logfilepath
+}
 
 if(Test-Path $logfilepath)
 {
     WriteToLogFile "------------------new run------------------"
 }
+
 
 #function to check if the user has adminstrator privileges
 
@@ -112,7 +118,7 @@ try {
     #         $ScriptPath = Read-Host -Prompt 'Enter the Source path where the release is located '
     #     }
 
-    $OriginalScriptPath, $revertDbScriptJSONPath = Read-Paths
+    # $OriginalScriptPath, $revertDbScriptJSONPath = Read-Paths $JsonPathforRead
     $ScriptPath = $OriginalScriptPath
 
     #$ScriptPath = Get-Path
