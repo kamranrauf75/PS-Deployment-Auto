@@ -1,9 +1,7 @@
 {
     "WebsiteName": "TestSite",
-    "PhysicalPath": "C:\\inetpub\\wwwroot\\wss\\VirtualDirectories\\",
-    "Port": 80,
-    "HostName": "testsite.com",
-    "IPBinding": "*",
+    "PhysicalPath": "C:\\inetpub\\wwwroot\\testnewsite",
+    "Port": "8080",
     "Protocol": "http",
-    "AppPoolName": "TestSiteAppPool"
+    "AppPoolName": "testscript"
 }
