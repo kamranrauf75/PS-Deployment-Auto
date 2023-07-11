@@ -1,13 +1,13 @@
-$JsonPathforRead = "D:\OtherProjects\On\ConfigPaths.JSON"
+$JsonPathforRead = "database_deployment\ConfigPaths.JSON"
 
 function Get-Path($ScriptPath, $filename)
 {
-    #$ScriptPath = Read-Host -Prompt 'Enter the path of: $filename '
-    #$ScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
 
     while(!($ScriptPath) -or !(Test-Path -Path $ScriptPath)){
         if(!(Test-Path -Path $ScriptPath)){
-            Write-Output "The path you entered wasn't correct"}
+            Write-Output "The path you entered wasn't correct"
+        }
+
         $ScriptPath = Read-Host -Prompt "Enter the path of: $filename"
     }
     $ScriptPath
@@ -19,21 +19,22 @@ function Read-Paths($JsonPathforRead){
     $OriginalScriptPath = $json.OriginalScriptPath
     $RevertScriptPath = $json.RevertScriptPath
     $revertDbScriptJSONPath = $json.revertDbScriptJSONPath
-    $logfilepath = $json.logfilepath
-    $revertlogfilepath = $json.revertlogfilepath
+    $connString = $json.connString
+
 
     $OriginalScriptPath = Get-Path $OriginalScriptPath "Original-Script"
     $RevertScriptPath = Get-Path $RevertScriptPath "Revert-Script"
     $revertDbScriptJSONPath = Get-Path $revertDbScriptJSONPath "Revert-Db-Script-JSON"
-    $logfilepath = Get-Path $revertlogfilepath "Revert-Log-File"
+
+
     #assigned revert log file path to log file path 
 
-    $OriginalScriptPath, $RevertScriptPath,$revertDbScriptJSONPath, $logfilepath
+    $OriginalScriptPath, $RevertScriptPath,$revertDbScriptJSONPath, $connString
 }
 
-
+$logfilepath = "logs\dbrevertlog.txt"
 # populating paths from json file
-$OriginalScriptPath, $RevertScriptPath, $revertDbScriptJSONPath, $logfilepath = Read-Paths $JsonPathforRead
+$OriginalScriptPath, $RevertScriptPath, $revertDbScriptJSONPath, $connString = Read-Paths $JsonPathforRead
 
 
 function WriteToLogFile ($message)
@@ -83,7 +84,7 @@ function revert-Db-Changes($originalScript, $revertScript, $JsonPath){
     }
     
     $hashmap = Get-HashTable-From-Json $JsonPath
-    $connString = "Server=kamranrauf;Database=testDb;User=ka;Password=test123"
+    # $connString = "Server=kamranrauf;Database=testDb;User=ka;Password=test123"
     #$ScriptPath = "D:\OtherProjects\DbScript\revertDbScript.sql"
     # $ScriptPath = Get-Path
 
@@ -162,14 +163,8 @@ function run-Script($ScriptPath, $connString, $hashmap, $statements){
 }
 
 
-# $OgScriptPath = "D:\OtherProjects\On\database_deployment\originalDbScript.sql"
-# $RevertScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
-# $RevertScriptJsonPath = "D:\OtherProjects\DbScript\revertDbScript.json"
-
-# $OriginalScriptPath, $RevertScriptPath, $revertDbScriptJSONPath = Read-Paths $JsonPathforRead
-
 # $RevertScriptPath = Get-Path
-revert-Db-Changes $OriginalScriptPath $RevertScriptPath $revertDbScriptJSONPath
+revert-Db-Changes $OriginalScriptPath $RevertScriptPath $revertDbScriptJSONPath $connString
 
 
 #Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass

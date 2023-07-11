@@ -1,11 +1,8 @@
 ﻿# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-$JsonPathforRead = "D:\OtherProjects\On\ConfigPaths.JSON"
+$JsonPathforRead = "database_deployment\ConfigPaths.JSON"
 
 function Get-Path($ScriptPath, $filename)
 {
-    #$ScriptPath = Read-Host -Prompt 'Enter the path of: $filename '
-    #$ScriptPath = "D:\OtherProjects\On\database_deployment\revertDbScript.sql"
-
     while(!($ScriptPath) -or !(Test-Path -Path $ScriptPath)){
         if(!(Test-Path -Path $ScriptPath)){
             Write-Output "The path you entered wasn't correct"}
@@ -19,19 +16,17 @@ function Read-Paths($JsonPathforRead){
     $json = Get-Content $JsonPath | Out-String | ConvertFrom-Json
     $OriginalScriptPath = $json.OriginalScriptPath
     $revertDbScriptJSONPath = $json.revertDbScriptJSONPath
-    $revertlogfilepath = $json.revertlogfilepath
+    $connString = $json.connString
 
     $OriginalScriptPath = Get-Path $OriginalScriptPath "Original-Script"
     $revertDbScriptJSONPath = Get-Path $revertDbScriptJSONPath "Revert-Db-Script-JSON"
-    $logfilepath = Get-Path $revertlogfilepath "Revert-Log-File"
 
-    $OriginalScriptPath, $revertDbScriptJSONPath, $logfilepath
-
+    $OriginalScriptPath, $revertDbScriptJSONPath, $connString
 }
 
-# $logfilepath = "D:\OtherProjects\On\database_deployment\dblog.txt"
+$logfilepath = "logs\dblog.txt"
 
-$OriginalScriptPath, $revertDbScriptJSONPath, $logfilepath = Read-Paths $JsonPathforRead
+$OriginalScriptPath, $revertDbScriptJSONPath, $connString = Read-Paths $JsonPathforRead
 
 function WriteToLogFile ($message)
 {
@@ -92,7 +87,7 @@ if(-not(Check-IsElevated)){
 }
 
 
-$connString = "Server=kamranrauf;Database=testDb;User=ka;Password=test123"
+# $connString = "Server=kamranrauf;Database=testDb;User=ka;Password=test123"
 
 WriteToLogFile "Db Script ran with connection string: $connString"
 $conn = New-Object System.Data.SqlClient.SqlConnection $connString
@@ -106,19 +101,7 @@ $hashmap = [ordered]@{}
 
 
 try {
-    #$ScriptPath = Read-Host -Prompt 'Enter the Db Script path '
-    # $ScriptPath = "D:\OtherProjects\DbScript\originalDbScript.sql"
-    #check if script path is valid or empty
-    
-    # while(!($ScriptPath) -or !(Test-Path -Path $ScriptPath) -or ((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
-    #         if(!(Test-Path -Path $ScriptPath)){
-    #             Write-Output "The path you entered wasn't correct"}
-    #         elseif(((Get-ChildItem $ScriptPath | Measure-Object).Count -eq 0)){
-    #         Write-Output "Folder is empty!"}
-    #         $ScriptPath = Read-Host -Prompt 'Enter the Source path where the release is located '
-    #     }
-
-    # $OriginalScriptPath, $revertDbScriptJSONPath = Read-Paths $JsonPathforRead
+  
     $ScriptPath = $OriginalScriptPath
 
     #$ScriptPath = Get-Path
