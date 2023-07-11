@@ -2,5 +2,5 @@
     "OriginalScriptPath":  "D:\\OtherProjects\\On\\database_deployment\\originalDbScript.sql",
     "RevertScriptPath":  "D:\\OtherProjects\\On\\database_deployment\\revertDbScript.sql",
     "revertDbScriptJSONPath":  "D:\\OtherProjects\\On\\database_deployment\\revertDbScript.json",
-    "revertlogfilepath":  "D:\\OtherProjects\\On\\database_deployment\\dblog.txt"
+    "connString": "Server=kamranrauf;Database=testDb;User=ka;Password=test123"
 }
