@@ -1,6 +1,6 @@
-# Deployment Automation for Banks
+# Deployment Automation
 
-This project implements deployment automation for banks, aiming to simplify and automate the deployment process for both application code and associated database management. The process assumes the existence of a backup mechanism and an archive folder for storing backups.
+This project implements deployment automation, aiming to simplify and automate the deployment process for both application code and associated database management. The process assumes the existence of a backup mechanism and an archive folder for storing backups.
 
 ## Scope
 
